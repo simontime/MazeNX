@@ -22,8 +22,13 @@ int main(int argc, char **argv) {
     while (appletMainLoop()) {
         hidScanInput();
 
+        touchPosition pos;
+        u32 pid = 0;
+
         u64 kDown = hidKeysHeld(CONTROLLER_P1_AUTO),
-            boost = kDown & KEY_ZR;
+            boost = kDown & KEY_ZR || hidTouchCount() > 1 ? 1 : 0;
+
+        hidTouchRead(&pos, pid);
 
         if (!ctx.inGame && !ctx.splash) 
             renderImage(true);
@@ -31,18 +36,18 @@ int main(int argc, char **argv) {
         if (kDown & KEY_PLUS && !ctx.inGame) 
             break;
 
-        if (kDown & KEY_A && !ctx.inGame) {
+        if ((kDown & KEY_A || kDown & KEY_TOUCH) && !ctx.inGame) {
             ctx.inGame = true;
             ctx.level++;
         };
 
-        if (ctx.inGame && kDown & KEY_LEFT)
+        if (ctx.inGame && (kDown & KEY_LEFT  || (pos.px > 0 && pos.px < 320)))
             ctx.xPos -= boost ? 6 : 2;
-        if (ctx.inGame && kDown & KEY_RIGHT)
-            ctx.xPos += boost ? 6 : 2;
-        if (ctx.inGame && kDown & KEY_UP)
+        if (ctx.inGame && (kDown & KEY_RIGHT ||  pos.px > 960))
+            ctx.xPos += boost ? 6 : 2;\
+        if (ctx.inGame && (kDown & KEY_UP    || (pos.py > 0 && pos.py < 220)))
             ctx.yPos -= boost ? 6 : 2;
-        if (ctx.inGame && kDown & KEY_DOWN)
+        if (ctx.inGame && (kDown & KEY_DOWN  ||  pos.py > 500))
             ctx.yPos += boost ? 6 : 2;
  
         keepInBounds(&ctx);
