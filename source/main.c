@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
         if (ctx.inGame && (kDown & KEY_LEFT  || (pos.px > 0 && pos.px < 320)))
             ctx.xPos -= boost ? 6 : 2;
         if (ctx.inGame && (kDown & KEY_RIGHT ||  pos.px > 960))
-            ctx.xPos += boost ? 6 : 2;\
+            ctx.xPos += boost ? 6 : 2;
         if (ctx.inGame && (kDown & KEY_UP    || (pos.py > 0 && pos.py < 220)))
             ctx.yPos -= boost ? 6 : 2;
         if (ctx.inGame && (kDown & KEY_DOWN  ||  pos.py > 500))
