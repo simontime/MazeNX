@@ -39,7 +39,7 @@ EXEFS_SRC	:=	exefs_src
 ROMFS		:=	romfs
 APP_TITLE	:=	Scary Maze Game
 APP_AUTHOR	:=	Simon Aarons
-APP_VERSION	:=	1.0.0
+APP_VERSION	:=	1.1.0
 ICON		:=	icon.jpg
 #---------------------------------------------------------------------------------
 # options for code generation
