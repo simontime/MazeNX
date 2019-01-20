@@ -54,6 +54,7 @@ void keepInBounds(gameCtx *ctx) {
 void checkToScream(gameCtx *ctx) {
     if (ctx->level == 3 && ctx->yPos < 200) {
         renderImage(false);
+        updateDisplay();
         playScream();
         playScream();
         reset(ctx);
