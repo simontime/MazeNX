@@ -104,7 +104,6 @@ void drawRectangle(gameCtx *ctx, bool collision, u32 x, u32 y, u32 w, u32 h, u32
 
 void renderImage(bool isSplash) {
     memcpy(framebuf, isSplash ? splash : scream, fbSize);
-    updateDisplay();
 }
 
 void clearFramebuffer() {

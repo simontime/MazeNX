@@ -7,7 +7,6 @@
 // Draws the cursor, then draws the framebuffer to screen.
 void drawCursor(gameCtx *ctx) {
     drawRectangle(ctx, true, ctx->xPos, ctx->yPos, 16, 16, BLUE);
-    updateDisplay();
 }
 
 // Draws level 1.

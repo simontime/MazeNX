@@ -22,13 +22,16 @@ int main(int argc, char **argv) {
     while (appletMainLoop()) {
         hidScanInput();
 
-        touchPosition pos;
+        MousePosition mpos;
+        touchPosition tpos;
         u32 pid = 0;
 
         u64 kDown = hidKeysHeld(CONTROLLER_P1_AUTO),
+            mDown = hidMouseButtonsDown(),
             boost = kDown & KEY_ZR || hidTouchCount() > 1 ? 1 : 0;
 
-        hidTouchRead(&pos, pid);
+        hidMouseRead(&mpos);
+        hidTouchRead(&tpos, pid);
 
         if (!ctx.inGame && !ctx.splash) 
             renderImage(true);
@@ -36,18 +39,27 @@ int main(int argc, char **argv) {
         if (kDown & KEY_PLUS && !ctx.inGame) 
             break;
 
-        if ((kDown & KEY_A || kDown & KEY_TOUCH) && !ctx.inGame) {
+        if ((kDown & KEY_A || kDown & KEY_TOUCH || mDown & MOUSE_LEFT) && !ctx.inGame) {
             ctx.inGame = true;
             ctx.level++;
         };
 
-        if (ctx.inGame && (kDown & KEY_LEFT  || (pos.px > 0 && pos.px < 320)))
+        if (mpos.x && mpos.y) {
+            ctx.xPos = mpos.x;
+            ctx.yPos = mpos.y;
+            if (!ctx.inGame)
+                drawRectangle(&ctx, false, ctx.xPos, ctx.yPos, 16, 16, BLUE);
+            if (mpos.y <= 1)
+                reset(&ctx);
+        }
+
+        if (ctx.inGame && (kDown & KEY_LEFT  || (tpos.px && tpos.px < 320)))
             ctx.xPos -= boost ? 6 : 2;
-        if (ctx.inGame && (kDown & KEY_RIGHT ||  pos.px > 960))
+        if (ctx.inGame && (kDown & KEY_RIGHT ||  tpos.px > 960))
             ctx.xPos += boost ? 6 : 2;
-        if (ctx.inGame && (kDown & KEY_UP    || (pos.py > 0 && pos.py < 220)))
+        if (ctx.inGame && (kDown & KEY_UP    || (tpos.py && tpos.py < 220)))
             ctx.yPos -= boost ? 6 : 2;
-        if (ctx.inGame && (kDown & KEY_DOWN  ||  pos.py > 500))
+        if (ctx.inGame && (kDown & KEY_DOWN  ||  tpos.py > 500))
             ctx.yPos += boost ? 6 : 2;
  
         keepInBounds(&ctx);
@@ -70,6 +82,8 @@ int main(int argc, char **argv) {
             drawLevel3(&ctx);
             drawCursor(&ctx);
         }
+
+        updateDisplay();
     }
 
     closeGfx();
